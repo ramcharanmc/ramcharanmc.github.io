@@ -613,6 +613,60 @@
             margin-bottom: 1rem;
         }
 
+        .project-card.featured {
+            grid-column: 1 / -1;
+            min-width: 0;
+            border-color: var(--accent-cyan);
+        }
+
+        .project-card.featured .project-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .result-scroll {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .result-table th,
+        .result-table td {
+            text-align: left;
+            padding: 0.45rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .result-table th {
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        .result-table td.num {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        .project-findings {
+            color: var(--text-secondary);
+            margin: 0 0 1rem 1.2rem;
+        }
+
+        .project-findings li {
+            margin-bottom: 0.4rem;
+        }
+
         .project-tag {
             display: inline-block;
             padding: 0.3rem 0.8rem;
@@ -1227,6 +1281,62 @@
         <h2 class="section-header">Key Projects & Research Contributions</h2>
         
         <div class="projects-grid">
+            <div class="project-card featured">
+                <h3>s2s-lab: Six Speech-to-Speech Architectures, Measured</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    From a naive ASR&rarr;LLM&rarr;TTS cascade to full-duplex Moshi, each architecture built on Modal
+                    and measured on one frozen 200-clip benchmark (clean, accented, disfluent and slowed speech). Every
+                    claim was registered before its test: 19 registrations, 9 supported, and the other 10 reported as
+                    they came out.
+                </p>
+                <div class="result-scroll">
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Rung</th><th>What it is</th><th>First audio, median</th><th>Word errors</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>R0</td><td>naive cascade: Whisper, then an LLM, then Kokoro</td><td class="num">0.66 s</td><td class="num">11.9%</td></tr>
+                            <tr><td>R1</td><td>streaming cascade, its first clause's silence trimmed</td><td class="num">heard at 0.50 s</td><td class="num">11.9%</td></tr>
+                            <tr><td>R1, larger models</td><td>large-v3-turbo and Qwen2.5-7B, the plans' sizes</td><td class="num">0.77 s</td><td class="num">8.5%</td></tr>
+                            <tr><td>R2</td><td>two-tier: a slow recognizer drives the reply</td><td class="num">0.89 s</td><td class="num">8.6%</td></tr>
+                            <tr><td>R3</td><td>speech-LLM: Qwen2-Audio hears the audio itself</td><td class="num">1.06 s</td><td class="num">&mdash;</td></tr>
+                            <tr><td>R4</td><td>speech-to-speech: Qwen2.5-Omni, its reply streamed</td><td class="num">heard at 2.27 s</td><td class="num">&mdash;</td></tr>
+                            <tr><td>R5</td><td>full duplex: Moshi, no turns at all</td><td class="num">150 ms gap*</td><td class="num">&mdash;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">
+                    Medians over the 200 clips, on Modal T4, A10 and L40S GPUs on different days; rows are compared
+                    fairly only within one container, as the repository explains. *Moshi's gap is measured in the
+                    stream, and it answered 96 of the 200 callers.
+                </p>
+                <ul class="project-findings">
+                    <li>Streaming the speech-to-speech model's reply cut what a caller waits from 6.8 s to 2.3 s.</li>
+                    <li>On synthetic turns, a silence threshold that never cuts off fluent speech cuts off most
+                        disfluent speakers; a sentence-completeness check took those cut-offs from 69% to 51%.</li>
+                    <li>At the plans' model sizes the cascade stopped refusing harmless questions (0 of 200, against
+                        16) and made 29% fewer word errors, for 0.37 s more wait.</li>
+                </ul>
+                <div class="project-links">
+                    <a href="https://ramcharanmc--s2s-lab-demo-web.modal.run" target="_blank" rel="noopener" class="btn btn-primary">&#9654; Try the live demo</a>
+                    <a href="https://github.com/ramcharanmc/s2s-lab" target="_blank" rel="noopener" class="btn btn-secondary">&#128187; Code</a>
+                    <a href="https://github.com/ramcharanmc/s2s-lab#the-ladder" target="_blank" rel="noopener" class="btn btn-secondary">&#128202; Results</a>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">
+                    The demo's measured results are open to everyone. Its live turns wake GPUs on Modal and need an
+                    access code: ask through <a href="#contact" style="color: var(--accent-cyan);">Contact</a>.
+                    Synthetic speech throughout; no clinical validity is claimed.
+                </p>
+                <div>
+                    <span class="project-tag">Whisper</span>
+                    <span class="project-tag">Qwen2.5-Omni</span>
+                    <span class="project-tag">Moshi</span>
+                    <span class="project-tag">Kokoro</span>
+                    <span class="project-tag">Modal</span>
+                    <span class="project-tag">Pre-registered</span>
+                </div>
+            </div>
+
             <div class="project-card">
                 <h3>Production ASR System</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">
